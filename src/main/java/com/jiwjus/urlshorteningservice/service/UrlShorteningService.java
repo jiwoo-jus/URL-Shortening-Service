@@ -26,10 +26,11 @@ public class UrlShorteningService {
             Url url = optUrl.get();
             url.addRequestCount();
             urlRepository.save(url);
+            String shortPath = base62.encode(url.getId());
             return UrlResponseDto
                     .builder()
                     .originalUrl(originalUrl)
-                    .shortUrl(urlCombineService.combineUrl(url.getShortPath()))
+                    .shortUrl(urlCombineService.combineUrl(shortPath))
                     .requestCount(url.getRequestCount())
                     .build();
         }
@@ -40,19 +41,19 @@ public class UrlShorteningService {
                     .requestCount(1)
                     .build());
             String shortPath = base62.encode(url.getId());
-            url.setShortPath(shortPath);
             urlRepository.save(url);
             return UrlResponseDto
                     .builder()
                     .originalUrl(originalUrl)
-                    .shortUrl(urlCombineService.combineUrl(url.getShortPath()))
+                    .shortUrl(urlCombineService.combineUrl(shortPath))
                     .requestCount(url.getRequestCount())
                     .build();
         }
     }
 
     public String redirect(String shortPath){
-        Optional<Url> optUrl = urlRepository.findByShortPath(shortPath);
+        Long id = base62.decode(shortPath);
+        Optional<Url> optUrl = urlRepository.findById(id);
         if(optUrl.isPresent())
             return optUrl.get().getOriginalUrl();
         else

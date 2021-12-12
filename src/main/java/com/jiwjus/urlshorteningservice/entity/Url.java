@@ -18,10 +18,6 @@ public class Url {
     @Column(nullable = false)
     private String originalUrl;
 
-    @Setter
-    @Column
-    private String shortPath;
-
     @Column(nullable = false)
     private int requestCount;
 
