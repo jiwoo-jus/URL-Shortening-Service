@@ -20,41 +20,40 @@ public class UrlShorteningService {
     private final UrlCombineService urlCombineService;
     private final String errorPath = "error";
 
-    public UrlResponseDto shortenUrl(String originalUrl){
+    public UrlResponseDto shortenUrl(String originalUrl) {
         Optional<Url> optUrl = urlRepository.findByOriginalUrl(originalUrl);
-        if(optUrl.isPresent()){
+        if (optUrl.isPresent()) {
             Url url = optUrl.get();
             url.addRequestCount();
             urlRepository.save(url);
             String shortPath = base62.encode(url.getId());
+
             return UrlResponseDto
                     .builder()
                     .originalUrl(originalUrl)
                     .shortUrl(urlCombineService.combineUrl(shortPath))
-                    .requestCount(url.getRequestCount())
-                    .build();
+                    .requestCount(url.getRequestCount()).build();
         }
-        else{
+        else {
             Url url = urlRepository.save(
                     Url.builder()
-                    .originalUrl(originalUrl)
-                    .requestCount(1)
-                    .build());
+                            .originalUrl(originalUrl)
+                            .requestCount(1).build());
             String shortPath = base62.encode(url.getId());
             urlRepository.save(url);
+
             return UrlResponseDto
                     .builder()
                     .originalUrl(originalUrl)
                     .shortUrl(urlCombineService.combineUrl(shortPath))
-                    .requestCount(url.getRequestCount())
-                    .build();
+                    .requestCount(url.getRequestCount()).build();
         }
     }
 
-    public String redirect(String shortPath){
+    public String redirect(String shortPath) {
         Long id = base62.decode(shortPath);
         Optional<Url> optUrl = urlRepository.findById(id);
-        if(optUrl.isPresent())
+        if (optUrl.isPresent())
             return optUrl.get().getOriginalUrl();
         else
             return urlCombineService.combineUrl(errorPath);
