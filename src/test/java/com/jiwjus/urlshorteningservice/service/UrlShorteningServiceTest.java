@@ -36,17 +36,19 @@ class UrlShorteningServiceTest {
         String originalUrl = "https://github.com/jiwoo-jus";
         Optional<Url> existingUrl = Optional.of(Url.builder()
                 .originalUrl(originalUrl)
+                .shortPath("b")
                 .requestCount(1).build());
+
         //when
         given(urlRepository.findByOriginalUrl(originalUrl)).willReturn(existingUrl);
-        given(base62.encode(existingUrl.get().getId())).willReturn("b");
-        given(urlCombineService.combineUrl(anyString())).willReturn("http://localhost:8088/b");
+        given(urlCombineService.combineUrl(existingUrl.get().getShortPath())).willReturn("http://localhost:8088/b");
 
+        //do
         UrlResponseDto urlResponseDto = urlShorteningService.shortenUrl(originalUrl);
 
         //then
         assertAll(
-                ()->assertThat(urlResponseDto.getOriginalUrl()).isEqualTo("https://github.com/jiwoo-jus"),
+                ()->assertThat(urlResponseDto.getOriginalUrl()).isEqualTo(originalUrl),
                 ()->assertThat(urlResponseDto.getShortUrl()).isEqualTo("http://localhost:8088/b"),
                 ()->assertThat(urlResponseDto.getRequestCount()).isEqualTo(2)
         );
@@ -67,13 +69,15 @@ class UrlShorteningServiceTest {
         given(urlRepository.findByOriginalUrl(originalUrl)).willReturn(emptyUrl);
         given(urlRepository.save(any(Url.class))).willReturn(newUrl);
         given(base62.encode(newUrl.getId())).willReturn("b");
-        given(urlCombineService.combineUrl(anyString())).willReturn("http://localhost:8088/b");
+        given(urlCombineService.combineUrl("b")).willReturn("http://localhost:8088/b");
 
+        //do
         UrlResponseDto urlResponseDto = urlShorteningService.shortenUrl(originalUrl);
 
         //then
         assertAll(
-                ()->assertThat(urlResponseDto.getOriginalUrl()).isEqualTo("https://github.com/jiwoo-jus"),
+                ()->assertThat(newUrl.getShortPath()).isEqualTo("b"),
+                ()->assertThat(urlResponseDto.getOriginalUrl()).isEqualTo(originalUrl),
                 ()->assertThat(urlResponseDto.getShortUrl()).isEqualTo("http://localhost:8088/b"),
                 ()->assertThat(urlResponseDto.getRequestCount()).isEqualTo(1)
         );
@@ -84,17 +88,19 @@ class UrlShorteningServiceTest {
     public void redirect_existingUrl(){
         //given
         String shortUrl = "http://localhost:8088/b";
-        Optional<Url> url = Optional.of(Url.builder()
+        Optional<Url> existingUrl = Optional.of(Url.builder()
                 .originalUrl("https://github.com/jiwoo-jus")
+                .shortPath("b")
                 .requestCount(1).build());
 
         //when
-        given(urlRepository.findById(anyLong())).willReturn(url);
+        given(urlRepository.findByShortPath(anyString())).willReturn(existingUrl);
 
-        String originalUrl = urlShorteningService.redirect(shortUrl);
+        //do
+        String returnUrl = urlShorteningService.redirect(shortUrl);
 
         //then
-        assertThat(originalUrl).isEqualTo("https://github.com/jiwoo-jus");
+        assertThat(returnUrl).isEqualTo("https://github.com/jiwoo-jus");
     }
 
     @Test
@@ -105,12 +111,12 @@ class UrlShorteningServiceTest {
         Optional<Url> emptyUrl = Optional.empty();
 
         //when
-        given(urlRepository.findById(anyLong())).willReturn(emptyUrl);
-        given(urlCombineService.combineUrl(anyString())).willReturn("http://localhost:8088/error");
+        given(urlRepository.findByShortPath(anyString())).willReturn(emptyUrl);
+        given(urlCombineService.combineUrl("error")).willReturn("http://localhost:8088/error");
 
-        String originalUrl = urlShorteningService.redirect(shortUrl);
+        String returnUrl = urlShorteningService.redirect(shortUrl);
 
         //then
-        assertThat(originalUrl).isEqualTo("http://localhost:8088/error");
+        assertThat(returnUrl).isEqualTo("http://localhost:8088/error");
     }
 }

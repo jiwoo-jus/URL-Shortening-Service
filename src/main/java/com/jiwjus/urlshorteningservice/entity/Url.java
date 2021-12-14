@@ -3,7 +3,6 @@ package com.jiwjus.urlshorteningservice.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @RequiredArgsConstructor
@@ -17,6 +16,10 @@ public class Url {
 
     @Column(nullable = false)
     private String originalUrl;
+
+    @Setter
+    @Column
+    private String shortPath;
 
     @Column(nullable = false)
     private int requestCount;

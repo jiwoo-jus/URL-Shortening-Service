@@ -15,16 +15,4 @@ public class Base62 {
         }
         return value.reverse().toString();
     }
-
-    public Long decode(String value){
-        long key = 0L;
-        long power = 1L;
-        for (int i = 0; i < value.length(); i++) {
-            int digit = BASE62.indexOf(value.charAt(i));
-            key += digit * power;
-            power *= 62;
-        }
-        return key;
-    }
-
 }
