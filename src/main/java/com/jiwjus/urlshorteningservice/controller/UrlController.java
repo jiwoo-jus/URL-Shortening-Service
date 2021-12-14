@@ -4,9 +4,9 @@ import com.jiwjus.urlshorteningservice.dto.UrlRequestDto;
 import com.jiwjus.urlshorteningservice.dto.UrlResponseDto;
 import com.jiwjus.urlshorteningservice.service.UrlShorteningService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,12 +15,16 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Objects;
 
-@Slf4j
 @RequiredArgsConstructor
-@RestController
+@Controller
 public class UrlController {
 
     private final UrlShorteningService urlShorteningService;
+
+    @GetMapping("/")
+    public String home(){
+        return "index";
+    }
 
     @PostMapping
     public ResponseEntity<?> shortenUrl(@Valid @RequestBody UrlRequestDto urlRequestDto, Errors errors){
