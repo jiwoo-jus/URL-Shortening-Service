@@ -14,6 +14,7 @@ public class Url {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Lob
     @Column(nullable = false)
     private String originalUrl;
 
