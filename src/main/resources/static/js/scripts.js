@@ -3,24 +3,34 @@
 * Copyright 2013-2021 Start Bootstrap
 * Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-coming-soon/blob/master/LICENSE)
 */
-window.addEventListener("load", function () {
-    document.getElementById('contactForm').addEventListener("submit", function (e) {
-        e.preventDefault(); // before the code
-        /* do what you want with the form */
-        const longUrl = e.target.elements[0].value
 
-        // send api request
-        // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-        // fetch('http://example.com/movies.json')
-        // .then(response => response.json())
-        // .then(data => console.log(data));
 
-        handleResponse('http://localhost:8088/b', 1)
+window.addEventListener("submit", function (e) {
+    document.getElementById('urlForm')
+    e.preventDefault();
+    const longUrl = e.target.elements[0].value
 
-        // if error -> put this in catch
-        // handleResponseError()
+    fetch("/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            originalUrl: longUrl
+        }),
     })
-});
+        .then((response) => response.json())
+        .then((response) => {
+            const shortUrl = response['shortUrl']
+            const requestCount = response['requestCount']
+            handleResponse(shortUrl, requestCount)
+            return response;
+        })
+
+    // if error -> put this in catch
+    // handleResponseError()
+    // })
+})
 
 
 const handleResponse = (shortUrl, requestCount) => {
@@ -28,7 +38,6 @@ const handleResponse = (shortUrl, requestCount) => {
     const shortUrlElement = document.getElementById('shortUrl');
     requestCountElement.innerText = `Request Number: ${requestCount}`
     shortUrlElement.innerText = `Shortened URL: ${shortUrl}`
-    copyToClipboard(shortUrl)
 }
 
 const handleResponseError = () => {
@@ -36,8 +45,3 @@ const handleResponseError = () => {
     errorElement.innerText = 'Error sending message'
 }
 
-function copyToClipboard(text) {
-    if (navigator && 'clipboard' in navigator) {
-        navigator.clipboard.writeText(text);
-    }
-}
