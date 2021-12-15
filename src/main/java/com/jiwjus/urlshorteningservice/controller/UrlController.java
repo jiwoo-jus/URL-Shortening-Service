@@ -33,7 +33,7 @@ public class UrlController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errMsg);
         }
         UrlResponseDto urlResponseDto = urlShorteningService.shortenUrl(urlRequestDto.getOriginalUrl());
-        return ResponseEntity.ok(urlResponseDto);
+        return ResponseEntity.status(HttpStatus.OK).body(urlResponseDto);
     }
 
     @GetMapping("/{shortPath}")
