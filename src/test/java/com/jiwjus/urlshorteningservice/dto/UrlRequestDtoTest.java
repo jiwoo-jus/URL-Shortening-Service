@@ -67,7 +67,7 @@ class UrlRequestDtoTest {
         for(Set<ConstraintViolation<UrlRequestDto>> violationCase : violationCases){
             assertThat(violationCase)
                     .extracting(ConstraintViolation::getMessage)
-                    .containsOnly("올바른 url 형식이 아닙니다.");
+                    .containsOnly("Invalid URL");
         }
     }
 }

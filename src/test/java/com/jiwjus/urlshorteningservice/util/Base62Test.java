@@ -29,6 +29,6 @@ class Base62Test {
         //then
         assertThat(value1).isEqualTo("b");
         assertThat(value2).isEqualTo("ZZZZZZZZ");
-        assertThat(value3).isEqualTo("kZviNa9fiMh");
+        assertThat(value3).isEqualTo("kZviNa9fiMg");
     }
 }
