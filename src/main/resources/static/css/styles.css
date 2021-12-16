@@ -89,6 +89,83 @@ body {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+#response-content {
+  display: none;
+  padding-top: 1rem;
+  padding-bottom: 0.3rem;
+  width: 40rem;
+  overflow-wrap: anywhere;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+#shortUrl{
+  cursor: pointer;
+  text-decoration: underline; text-underline-position:under;
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+#originalUrl {
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+#btn-furkan {
+  display: none;
+  font-size: 0.95rem;
+  background-color:#E0E5EC;
+  border: none;
+  border-radius: 0.1rem;
+  box-shadow: 0.2rem 0.2rem 0.4rem rgb(163,177,198,0.6), -0.2rem -0.2rem -0.4rem rgba(255,255,255, 0.5);
+  color: #4D3252;
+  font-weight: 600;
+  height: 1.3rem;
+  margin-left: 1rem;
+  margin-top: 0.25rem;
+  overflow: hidden;
+  position: relative;
+  width: 4.25rem;
+  /*padding: 0.1rem;*/
+  vertical-align: top;
+}
+
+#btn-furkan:after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  opacity: 0;
+  transform: translateX(-100%);
+
+  background: rgba(255, 255, 255, 0.13);
+  background: linear-gradient(
+          to right,
+          rgba(255, 255, 255, 0.13) 0%,
+          rgba(255, 255, 255, 0.13) 77%,
+          rgba(255, 255, 255, 0.5) 92%,
+          rgba(255, 255, 255, 0.3) 100%
+  );
+}
+
+#btn-furkan:hover:after {
+  opacity: 1;
+  top: 0;
+  left: 0;
+  transform: translateX(0);
+  transition-property: transform, opacity;
+  transition-duration: 0.7s, 0.15s;
+  transition-timing-function: ease;
+}
+
+#btn-furkan:active:after {
+  opacity: 0;
+}
+
+
+
 hr {
   margin: 1rem 0;
   color: inherit;
@@ -11329,6 +11406,7 @@ video.bg-video {
     display: none;
   }
 }
+
 .masthead {
   position: relative;
   overflow: hidden;
@@ -11368,6 +11446,7 @@ video.bg-video {
   width: 100%;
   font-size: 1rem;
   padding: 1rem;
+  padding-top: 0.8rem;
 }
 .masthead .masthead-content .input-group-newsletter button {
   font-size: 0.85rem;
@@ -11375,6 +11454,7 @@ video.bg-video {
   text-transform: uppercase;
   letter-spacing: 1px;
   padding: calc(1rem + 2px);
+  padding: calc(0.8rem + 2px);
 }
 
 @media (min-width: 992px) {

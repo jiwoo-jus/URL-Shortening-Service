@@ -33,32 +33,65 @@ window.addEventListener("submit", function (e) {
         })
         .then((responseJson)=>{
             const shortUrl = responseJson['shortUrl']
-            const requestCount = responseJson['requestCount']
+            const originalUrl = responseJson['originalUrl']
             console.log(responseJson)
-            handleResponse(shortUrl, requestCount)
+            handleResponse(shortUrl, originalUrl)
         })
         .catch((error) => {
             console.log(error)
         });
 
+
 })
 
 
-const handleResponse = (shortUrl, requestCount) => {
-    const requestCountElement = document.getElementById('requestCount');
-    const shortUrlElement = document.getElementById('shortUrl');
-    const errorElement = document.getElementById('submitErrorMessage');
-    requestCountElement.innerText = `Request Number: ${requestCount}`
-    shortUrlElement.innerText = `Shortened URL: ${shortUrl}`
-    errorElement.innerText = ``
+const responseContentElement = document.getElementById('response-content');
+const errorElement = document.getElementById('submitErrorMessage');
+const shortUrlElement = document.getElementById('shortUrl');
+const originalUrlElement = document.getElementById('originalUrl');
+const button = document.getElementById("btn-furkan");
+
+
+const handleResponse = (shortUrl, originalUrl) => {
+    responseContentElement.style.display = 'block';
+    errorElement.style.display = 'none'
+    originalUrlElement.innerText = `${originalUrl}`
+    shortUrlElement.innerText = `${shortUrl}`
+    button.style.display = 'inline-block'
+    copyToClipboard(button, shortUrl)
+
+    shortUrlElement.addEventListener("click", (e) => {
+        location.href = `${shortUrl}`
+    })
 }
 
+
 const handleResponseError = (submitErrorMessage) => {
-    const requestCountElement = document.getElementById('requestCount');
-    const shortUrlElement = document.getElementById('shortUrl');
-    const errorElement = document.getElementById('submitErrorMessage');
-    requestCountElement.innerText = ``
-    shortUrlElement.innerText = ``
+    responseContentElement.style.display = 'none';
+    errorElement.style.display = 'block';
     errorElement.innerText = `${submitErrorMessage}`
 }
 
+
+const withClipboardAPICopy = (text) => {
+    navigator.clipboard.writeText(text).then(
+        function () {
+            console.log("Async: Copying to clipboard was successful!");
+        },
+        function (err) {
+            console.error("Async: Could not copy text: ", err);
+        }
+    )
+}
+
+
+function copyToClipboard(button, text) {
+    button.addEventListener("click", (e) => {
+        button.textContent = "copied";
+
+        setTimeout(() => {
+            button.textContent = "copy";
+        }, 2000);
+
+        withClipboardAPICopy(text);
+    })};

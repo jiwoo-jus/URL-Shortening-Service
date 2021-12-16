@@ -26,6 +26,11 @@ public class UrlController {
         return "index";
     }
 
+    @GetMapping("/error")
+    public String error(){
+        return "error";
+    }
+
     @PostMapping
     public ResponseEntity<?> shortenUrl(@Valid @RequestBody UrlRequestDto urlRequestDto, Errors errors){
         if (errors.hasErrors()){
@@ -38,8 +43,8 @@ public class UrlController {
 
     @GetMapping("/{shortPath}")
     public void redirectUrl(@PathVariable String shortPath, HttpServletResponse httpServletResponse) throws IOException {
-        String originalUrl = urlShorteningService.redirect(shortPath);
-        httpServletResponse.sendRedirect(originalUrl);
+        String responseUrl = urlShorteningService.redirect(shortPath);
+        httpServletResponse.sendRedirect(responseUrl);
     }
 
 }
